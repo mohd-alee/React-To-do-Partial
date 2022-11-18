@@ -2,70 +2,67 @@ import './App.css';
 import { useState } from 'react';
 
 function App() {
-  const [inputValue, setInputValue] = useState('');
-  const [todoList, setTodoList] = useState([
-    {
-      name: 'Javascript',
-      status: 0,
-    },
-    {
-      name: 'React',
-      status: 0,
-    },
-    {
-      name: 'Vue',
-      status: 0,
-    },
-    {
-      name: 'Node',
-      status: 0,
-    }
+  const [items, setItems] = useState([
+    'item 1', 'item 2', 'item 3', 'item 4'
   ]);
-
-  const addToDoItem = () => {
-    if(inputValue){
-      let copyToDoList = [...todoList];
-      copyToDoList.push({name: inputValue,status: 0});
-      setTodoList(copyToDoList);
-      setInputValue("");
-    }else{
-      alert('Please Enter Some Value');
+  const [inputVal, setinputVal] = useState('');
+  const [editmode, seteditmode] = useState(false);
+  const [editIndex, seteditIndex] = useState(0);
+  const addToDoItem = ()=>{
+    if(!inputVal){
+      alert ('Please enter some value');
+      return;
     }
-  };
-  const completedFunction = index => {
-    let copyToDoList = [...todoList];
-    copyToDoList[index].status = !copyToDoList[index].status;
-    setTodoList(copyToDoList);
-  };
+    let copyItems = [...items];
+    copyItems.push(inputVal);
+    setItems(copyItems);
+    setinputVal('');
+  }
+  const deleteItem = index => {
+    let copyItems = [...items];
+    copyItems.splice(index,1);
+    setItems(copyItems);
+  }
+  const editItem = index => {
+    seteditmode(true);
+    seteditIndex(index);
+    let copyItems = [...items];
+    setinputVal(copyItems[index]);
+  }
+  const confirmEditItem = () => {
+    let copyItems = [...items];
+    copyItems[editIndex] = inputVal;
+    setItems(copyItems);
+    seteditmode(false);
+    setinputVal('');
+  }
+  
   return (
     <div className='container mt-5'>
       <div className='row'>
         <div className='offset-md-3 col-md-6'>
-          <input type='text' value={inputValue} className='form-control' placeholder='Enter To-do Item' onChange={(event) => {setInputValue(event.target.value)}}></input>
-          <button className='btn btn-success w-50 mt-2 mx-auto d-block' onClick={addToDoItem}>Add Item</button>
+          <input type='text' value={inputVal} className='form-control' placeholder='Enter To-do Item' onChange={ event => { setinputVal(event.target.value) }}></input>
+          { (editmode) ?
+           <button className='btn btn-success w-50 mt-2 mx-auto d-block' onClick={confirmEditItem}>Update Item</button>
+           :
+           <button className='btn btn-success w-50 mt-2 mx-auto d-block' onClick={addToDoItem}>Add Item</button>
+          }
         </div>
       </div>
       <div className='row mt-5'>
-      {todoList.map( (item,index) => {
-        return (
-        <div className='col-md-4 col-lg-3 mb-4' key={index}>
-          <div className='to-do_item'>
-            {
-            !item.status ? 
-            <>
-              <i className="fa-solid fa-circle-check" onClick={()=> {completedFunction(index)} }></i>
-              <h2>{item.name}</h2>
-            </>
-            :
-            <>
-              <i className="fa-sharp fa-solid fa-circle-xmark" onClick={()=> {completedFunction(index)} }></i>
-              <h2><s>{item.name}</s></h2>
-            </>
-            }
-          </div>
-        </div>
-        )
-      } )}
+        {
+          items.map( (item,index) => {
+            return (
+            <div className='col-md-4 col-lg-3 mb-5' key={index}>
+              <div className='to-do_item'>
+                <i className="fa-sharp fa-solid fa-circle-xmark" id='deleteItem' onClick={()=>{deleteItem(index)}}></i>
+                <i className="fa-solid fa-pen-to-square" id='editItem' onClick={()=>{editItem(index)}}></i>
+                <h2>{item}</h2>
+              </div>
+            </div>
+            )
+          })
+        }
       </div>
     </div>
   );

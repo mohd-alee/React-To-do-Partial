@@ -22,6 +22,19 @@
   right: -11px;
   font-size: 28px;
   cursor: pointer;
+  color: red;
+}
+.to-do_item i#editItem {
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
+  bottom: -25px;
+  top: auto;
+  color: #59c359;
+  background-color: #fff;
+  padding: 0px 10px 6px;
+  border-radius: 5px;
+  box-shadow: 1px 5px 3px 1px #cecece;
 }
 
 @media (prefers-reduced-motion: no-preference) {
